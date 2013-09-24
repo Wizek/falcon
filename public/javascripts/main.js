@@ -1,33 +1,65 @@
 function AppViewModel() {
   var self = this
   this.publication = ko.observable()
-  window.impressions = this.impressions = ko.observableArray([/*d3.range(66).map(next)*/])
+  window.impressions = this.impressions = ko.observableArray()
 
   var t = 1297110663, // start time (seconds since epoch)
       v = 70, // start value (subscribers)
       v2 = 10 // start value (subscribers)
-      // data = d3.range(66).map(next) // starting dataset
 
   function next() {
     return {
       time: ++t,
       value: v = ~~Math.max(10, Math.min(90, v + 10 * (Math.random() - .5))),
-      value2: v2 = ~~Math.max(10, Math.min(90, v + 10 * (Math.random() - .5)))
+      value2: v2 = ~~Math.max(10, Math.min(90, v2 + 10 * (Math.random() - .5)))
     }
   }
-  for (var i = 0; i < 80; i++) {
-    self.impressions.push(next())
-  }
+  self.impressions(d3.range(100).map(function() {return {time:++t, value: 0}}))
 
-  setInterval(function() {
-    self.impressions.shift()
-    self.impressions.push(next())
-  }, 1500)
+  // setInterval(function() {
+  //   self.impressions.shift()
+  //   self.impressions.push(next())
+  // }, 1500)
 
-  setTimeout(function() {
-    var response = {"version":"5.3.9","response":[{"id":"8a1330c93e31b8af013e360d6a2106ea","content":{"message":"Her er den perfekte gave","id":"8a1330c93e31b8af013e360d6a2106ea","network":"facebook","postType":"photo","media":{"fileName":"konfirmationsgave til hende.jpg","url":"http://s3.amazonaws.com/mingler.falcon.scheduled_post_pictures/25c69cba-8881-4147-9fc9-d61a9c2de676"}},"tags":["converstaion","sales"],"status":"draft","channels":[{"name":"Konfirmanden","id":433104606739910}],"scheduled":"2013-08-08T08:00:00.000Z","geo":{"countries":[{"value":"Afghanistan","key":"134"}],"languages":[{"value":"Afrikaans","key":"31"}],"cities":[],"regions":[]}}],"status":"OK","error":""}
-    self.publication(response.response[0])
-  }, 500)
+  $.get('/api/publishing').then(function(res) {
+    self.publication(res.response[0])
+  })
+  $.get('/api/impressions').then(function(res) {
+    // self.impressions(d3.range(100).map(next))
+    res = res.response
+    res = res.filter(function(d) {
+      return d.post_impressions
+    })
+    var fix = []
+    var lastTime = new Date(res[res.length-1].post_impressions[0].timestamp).valueOf()
+    var resolution = 60*1000
+    var count = 100
+    var startTime = lastTime - count * resolution
+    for (var i = startTime; i < lastTime; i += resolution) {
+      var c = {}
+      fix.push(c)
+      c.time = i
+      c.value = res.reduce(function(acc, x) {
+        var time = new Date(x.post_impressions[0].timestamp).valueOf()
+        if (inRange()) {
+          return acc + (parseInt(x.post_impressions[0].value) / 10000)
+        } else {
+          return acc
+        }
+        function inRange () {
+          return time > i && time < i + resolution
+          return Math.random() > 0.9
+        }
+      }, 0)
+
+    }
+    // res.forEach(function(d) {
+    //   d.time = next().time
+    //   d.value = d.post_impressions[0].value / 1000
+    // })
+    console.log(fix)
+    self.impressions(fix)
+  })
 }
 
 
@@ -35,11 +67,11 @@ ko.bindingHandlers.reachChart = {
   init: function(element, valueAccessor) {
     var self = this
     var data = valueAccessor()
-    console.log('data', data)
+    // console.log('data', data)
     if (!data || !data.length) { return }
 
-    var w = 5,
-        h = 80
+    var w = 10,
+        h = 400
 
     var x = d3.scale.linear()
         .domain([0, 1])
@@ -78,7 +110,7 @@ ko.bindingHandlers.reachChart = {
   },
   update: function(element, valueAccessor) {
     var data = valueAccessor()
-    console.log('data', data)
+    // console.log('data', data)
 
     var self = this
     function redraw() {
