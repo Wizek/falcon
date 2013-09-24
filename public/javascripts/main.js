@@ -1,4 +1,10 @@
 function AppViewModel() {
+  var socket = io.connect('http://localhost');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  })
+
   var self = this
   this.publication = ko.observable()
   window.impressions = this.impressions = ko.observableArray()
