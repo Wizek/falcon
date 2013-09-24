@@ -46,15 +46,22 @@ var io = require('socket.io').listen(httpServer)
 
 io.sockets.on('connection', function (socket) {
 
-  var t = 1297110663, // start time (seconds since epoch)
-      v = 0, // start value (subscribers)
-      v2 = 0 // start value (subscribers)
+  var t = 1297110663
+  var v1 = 10
+  var v2 = 10
+  var v3 = 10
+  var v4 = 10
 
   function next() {
+    function e (seed) {
+      return ~~Math.max(3, Math.min(25, seed + 10 * (Math.random() - .5)))
+    }
     return {
       time: ++t,
-      value: v = ~~Math.max(3, Math.min(90, v + 10 * (Math.random() - .5))),
-      value2: v2 = ~~Math.max(3, Math.min(90, v2 + 10 * (Math.random() - .5)))
+      post_impressions: v1 = e(v1),
+      post_impressions_organic: v2 = e(v2),
+      post_impressions_viral: v3 = e(v3),
+      post_impressions_paid: v4 = e(v4)
     }
   }
 
