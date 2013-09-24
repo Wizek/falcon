@@ -2,9 +2,12 @@ doctype 5
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet/less", type="text/css", href='/stylesheets/style.less')
     :loadr
+      jquery
       http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js
+      http://d3js.org/d3.v3.js
+      http://cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js
   body
     block content
     script(src='/javascripts/main.js')
