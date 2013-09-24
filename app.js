@@ -26,7 +26,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', function(req, res) {
-  res.render('index', { title: 'Express' })
+  res.render('index', { title: 'Falcon App' })
 })
 
 app.get('/api/publishing', function(req, res) {
@@ -38,7 +38,7 @@ app.get('/api/reach', function(req, res) {
 
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'))
+  console.log('Falcon server listening on port ' + app.get('port'))
 })
 
 require('jade').filters.loadr = function(content, filename) {
