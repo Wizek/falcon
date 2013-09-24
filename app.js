@@ -30,17 +30,18 @@ app.get('/', function(req, res) {
 })
 
 app.get('/api/publishing', function(req, res) {
-  res.send({a:1})
-})
-app.get('/api/reach', function(req, res) {
-  res.send({a:1})
+  res.send(require('./mockData/publishing.json'))
 })
 
+app.get('/api/impressions', function(req, res) {
+  res.send(require('./mockData/impressions.json'))
+})
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Falcon server listening on port ' + app.get('port'))
 })
 
+// Adds better loadr support for jade
 require('jade').filters.loadr = function(content, filename) {
   var middle = content.replace(/[\s\n,]/g, ',')
   var full = ''
