@@ -4,8 +4,8 @@ function AppViewModel() {
   window.impressions = this.impressions = ko.observableArray()
 
   var t = 1297110663, // start time (seconds since epoch)
-      v = 70, // start value (subscribers)
-      v2 = 10 // start value (subscribers)
+      v = 0, // start value (subscribers)
+      v2 = 0 // start value (subscribers)
 
   function next() {
     return {
@@ -42,7 +42,7 @@ function AppViewModel() {
       c.value = res.reduce(function(acc, x) {
         var time = new Date(x.post_impressions[0].timestamp).valueOf()
         if (inRange()) {
-          return acc + (parseInt(x.post_impressions[0].value) / 10000)
+          return acc + (parseInt(x.post_impressions[0].value) / 30000)
         } else {
           return acc
         }
@@ -70,7 +70,7 @@ ko.bindingHandlers.reachChart = {
     // console.log('data', data)
     if (!data || !data.length) { return }
 
-    var w = 10,
+    var w = 6,
         h = 400
 
     var x = d3.scale.linear()
@@ -87,13 +87,14 @@ ko.bindingHandlers.reachChart = {
         .attr("width", w * data.length - 1)
         .attr("height", h)
 
-    chart.selectAll("rect")
+    chart.selectAll("rect.post_impressions")
         .data(data)
-      .enter().append("rect")
+      .append("rect")
         .attr("x", function(d, i) { return x(i) - .5 })
         .attr("y", function(d) { return h - y(d.value) - .5 })
         .attr("width", w)
         .attr("height", function(d) { return y(d.value) })
+        .attr("class", "post_impressions")
 
     chart.append("line")
         .attr("x1", 0)
@@ -114,14 +115,16 @@ ko.bindingHandlers.reachChart = {
 
     var self = this
     function redraw() {
-      var rect = self.chart.selectAll("rect")
+      // return
+      var rect = self.chart.selectAll("rect.post_impressions")
           .data(data, function(d) { return d.time })
 
       rect.enter().insert("rect", "line")
           .attr("x", function(d, i) { return self.x(i + 1) - .5 })
-          .attr("y", function(d) { return h - self.y(d.value) - .5 })
-          .attr("width", w)
+          .attr("y", function(d) { return self.h - self.y(d.value) - .5 })
+          .attr("width", self.w)
           .attr("height", function(d) { return self.y(d.value) })
+          .attr("class", "post_impressions")
         .transition()
           .duration(1000)
           .attr("x", function(d, i) { return self.x(i) - .5 })
