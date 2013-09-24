@@ -1,31 +1,19 @@
+var socket = io.connect('http://localhost')
+
 function AppViewModel() {
-  var socket = io.connect('http://localhost');
-  socket.on('news', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
+  var self = this
+
+  this.publication = ko.observable()
+  this.impressions = ko.observableArray()
+
+  socket.on('new_impression', function (data) {
+    // console.log(data)
+    self.impressions.shift()
+    self.impressions.push(data)
   })
 
-  var self = this
-  this.publication = ko.observable()
-  window.impressions = this.impressions = ko.observableArray()
-
-  var t = 1297110663, // start time (seconds since epoch)
-      v = 0, // start value (subscribers)
-      v2 = 0 // start value (subscribers)
-
-  function next() {
-    return {
-      time: ++t,
-      value: v = ~~Math.max(10, Math.min(90, v + 10 * (Math.random() - .5))),
-      value2: v2 = ~~Math.max(10, Math.min(90, v2 + 10 * (Math.random() - .5)))
-    }
-  }
-  self.impressions(d3.range(100).map(function() {return {time:++t, value: 0}}))
-
-  // setInterval(function() {
-  //   self.impressions.shift()
-  //   self.impressions.push(next())
-  // }, 1500)
+  // TODO: Remove this unnecessary init line after making the chart handle different data lengths
+  self.impressions(d3.range(100).map(function() {return {time:0, value: 0}}))
 
   $.get('/api/publishing').then(function(res) {
     self.publication(res.response[0])
