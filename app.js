@@ -53,8 +53,8 @@ io.sockets.on('connection', function (socket) {
   function next() {
     return {
       time: ++t,
-      value: v = ~~Math.max(1, Math.min(90, v + 10 * (Math.random() - .5))),
-      value2: v2 = ~~Math.max(1, Math.min(90, v2 + 10 * (Math.random() - .5)))
+      value: v = ~~Math.max(3, Math.min(90, v + 10 * (Math.random() - .5))),
+      value2: v2 = ~~Math.max(3, Math.min(90, v2 + 10 * (Math.random() - .5)))
     }
   }
 

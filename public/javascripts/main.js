@@ -7,7 +7,7 @@ function AppViewModel() {
   this.impressions = ko.observableArray()
 
   socket.on('new_impression', function (data) {
-    // console.log(data)
+    console.log(data)
     self.impressions.shift()
     self.impressions.push(data)
   })
@@ -33,6 +33,7 @@ function AppViewModel() {
       var c = {}
       fix.push(c)
       c.time = i
+      c.value2 = 33
       c.value = res.reduce(function(acc, x) {
         var time = new Date(x.post_impressions[0].timestamp).valueOf()
         if (inRange()) {
@@ -45,7 +46,7 @@ function AppViewModel() {
           return Math.random() > 0.9
         }
       }, 0)
-
+      c.post_impressions = c.value
     }
     // res.forEach(function(d) {
     //   d.time = next().time
@@ -81,21 +82,23 @@ ko.bindingHandlers.reachChart = {
         .attr("width", w * data.length - 1)
         .attr("height", h)
 
+    // TODO Refactor with d3 stacked layout
     chart.selectAll("rect.post_impressions")
         .data(data)
       .append("rect")
-        .attr("x", function(d, i) { return x(i) - .5 })
-        .attr("y", function(d) { return h - y(d.value) - .5 })
-        .attr("width", w)
-        .attr("height", function(d) { return y(d.value) })
         .attr("class", "post_impressions")
 
-    chart.append("line")
-        .attr("x1", 0)
-        .attr("x2", w * data.length)
-        .attr("y1", h - .5)
-        .attr("y2", h - .5)
-        .style("stroke", "#000")
+    chart.selectAll("rect.post_impressions_organic")
+        .data(data)
+      .append("rect")
+        .attr("class", "post_impressions_organic")
+
+    // chart.append("line")
+    //     .attr("x1", 0)
+    //     .attr("x2", w * data.length)
+    //     .attr("y1", h - .5)
+    //     .attr("y2", h - .5)
+    //     .style("stroke", "#000")
 
     self.w = w
     self.h = h
@@ -109,11 +112,18 @@ ko.bindingHandlers.reachChart = {
 
     var self = this
     function redraw() {
-      // return
+      // plain
+      // organic
+      // viral
+      // paid
+      var allrect = self.chart.selectAll("rect")
+          .data(data, function(d) { return d.time })
       var rect = self.chart.selectAll("rect.post_impressions")
           .data(data, function(d) { return d.time })
+      var rect_organic = self.chart.selectAll("rect.post_impressions_organic")
+          .data(data, function(d) { return d.time })
 
-      rect.enter().insert("rect", "line")
+      rect.enter().insert("rect")
           .attr("x", function(d, i) { return self.x(i + 1) - .5 })
           .attr("y", function(d) { return self.h - self.y(d.value) - .5 })
           .attr("width", self.w)
@@ -123,11 +133,29 @@ ko.bindingHandlers.reachChart = {
           .duration(1000)
           .attr("x", function(d, i) { return self.x(i) - .5 })
 
+      rect_organic.enter().insert("rect")
+          .attr("x", function(d, i) { return self.x(i + 1) - .5 })
+          .attr("y", function(d) { return self.h - self.y(d.value2) - self.y(d.value) - .5 })
+          .attr("width", self.w)
+          .attr("height", function(d) { return self.y(d.value2) })
+          .attr("class", "post_impressions_organic")
+        .transition()
+          .duration(1000)
+          .attr("x", function(d, i) { return self.x(i) - .5 })
+
       rect.transition()
           .duration(1000)
           .attr("x", function(d, i) { return self.x(i) - .5 })
 
+      rect_organic.transition()
+          .duration(1000)
+          .attr("x", function(d, i) { return self.x(i) - .5 })
+
       rect.exit().transition()
+          .duration(1000)
+          .attr("x", function(d, i) { return self.x(i - 1) - .5 })
+          .remove()
+      rect_organic.exit().transition()
           .duration(1000)
           .attr("x", function(d, i) { return self.x(i - 1) - .5 })
           .remove()
