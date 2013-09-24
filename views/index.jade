@@ -2,12 +2,18 @@ extends layout
 
 block content
   h1 Publication
-  //- ul(data-bind="text: publication().id")
-  ul(data-bind="fyoreach: publication()")
-    li
-      span id:
-      span(data-bind="text: publication().id")
-    li
-      span content.message:
-      span(data-bind="text: publication().content.message")
+  div(data-bind="ifnot: publication()")
+    p Loading...
+  div(data-bind="if: publication()")
+    ul(data-bind="with: publication()")
+      li
+        span id:
+        span(data-bind="text: id")
+      li(data-bind="with: content")
+        span content:
+        ul
+          li
+            span message:
+            span(data-bind="text: message")
+
   h1 Reach
