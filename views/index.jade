@@ -1,5 +1,13 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Publication
+  //- ul(data-bind="text: publication().id")
+  ul(data-bind="fyoreach: publication()")
+    li
+      span id:
+      span(data-bind="text: publication().id")
+    li
+      span content.message:
+      span(data-bind="text: publication().content.message")
+  h1 Reach
