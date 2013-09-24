@@ -6,8 +6,8 @@
 var express = require('express')
 var http = require('http')
 var path = require('path')
-
 var app = express()
+var io = require('socket.io').listen(app)
 
 // all environments
 app.set('port', process.env.PORT || 3000)
