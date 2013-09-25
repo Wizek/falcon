@@ -29,7 +29,6 @@ function AppViewModel() {
   }
 
   socket.on('new_impression', function (data) {
-    // console.log(data)
     self.impressions.shift()
     self.impressions.push(data)
   })
@@ -41,7 +40,6 @@ function AppViewModel() {
     window.data = self.publication(res.response[0])
   })
   $.get('/api/impressions').then(function(res) {
-    // self.impressions(d3.range(100).map(next))
     res = res.response
     res = res.filter(function(d) {
       return d.post_impressions
@@ -85,7 +83,6 @@ ko.bindingHandlers.reachChart = {
   init: function(element, valueAccessor) {
     var self = this
     var data = valueAccessor()
-    // console.log('data', data)
     if (!data || !data.length) { return }
     console.log('max', d3.max(data, function(d){return d.post_impressions + d.post_impressions}))
     debugger
@@ -158,7 +155,6 @@ ko.bindingHandlers.reachChart = {
   },
   update: function(element, valueAccessor) {
     var data = valueAccessor()
-    // console.log('data', data)
 
     var self = this
     function redraw() {
