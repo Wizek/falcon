@@ -38,7 +38,7 @@ function AppViewModel() {
           if (!x[name]) { return acc }
           var time = new Date(x[name][0].timestamp).valueOf()
           if (inRange()) {
-            return acc + (parseInt(x[name][0].value) / 30000)
+            return acc + (parseInt(x[name][0].value) / 50000)
           } else {
             return acc
           }
@@ -77,34 +77,28 @@ ko.bindingHandlers.reachChart = {
         .domain([0, 100])
         .rangeRound([0, h])
 
+    var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom")
+
+    var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("right")
+
+
     console.log(w * data.length - 1)
     var chart = d3.select("body").append("svg")
         .attr("class", "chart")
         .attr("width", w * data.length - 1)
         .attr("height", h)
 
-    // TODO Refactor with d3 stacked layout
-    // chart.selectAll("rect.post_impressions")
-    //     .data(data)
-    //   .append("rect")
-    //     .attr("class", "post_impressions")
-
-    // chart.selectAll("rect.post_impressions_organic")
-    //     .data(data)
-    //   .append("rect")
-    //     .attr("class", "post_impressions_organic")
-
-    // chart.selectAll("rect.post_impressions_viral")
-    //     .data(data)
-    //   .append("rect")
-    //     .attr("class", "post_impressions_viral")
-
-    // chart.append("line")
-    //     .attr("x1", 0)
-    //     .attr("x2", w * data.length)
-    //     .attr("y1", h - .5)
-    //     .attr("y2", h - .5)
-    //     .style("stroke", "#000")
+    chart.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0," + (h - 20) + ")")
+      .call(xAxis)
+    chart.append("g")
+      .attr("class", "axis")
+      .call(yAxis)
 
     self.w = w
     self.h = h
@@ -118,10 +112,11 @@ ko.bindingHandlers.reachChart = {
 
     var self = this
     function redraw() {
-      // plain
-      // organic
-      // viral
-      // paid
+      // TODO Refactor with d3 stacked layout
+      extract('', function(d) { return self.h - self.y(d.post_impressions) - .5 })
+      extract('_organic', function(d) { return self.h - self.y(d.post_impressions) - self.y(d.post_impressions_organic) - .5 })
+      extract('_viral', function(d) { return self.h - self.y(d.post_impressions) - self.y(d.post_impressions_organic) - self.y(d.post_impressions_viral) - .5 })
+      extract('_paid', function(d) { return self.h - self.y(d.post_impressions) - self.y(d.post_impressions_organic) - self.y(d.post_impressions_viral) - self.y(d.post_impressions_paid) - .5 })
 
       function extract (suffix, yFn) {
         var rect = self.chart.selectAll("rect.post_impressions" + suffix)
@@ -147,11 +142,6 @@ ko.bindingHandlers.reachChart = {
             .attr("x", function(d, i) { return self.x(i - 1) - .5 })
             .remove()
       }
-
-      extract('', function(d) { return self.h - self.y(d.post_impressions) - .5 })
-      extract('_organic', function(d) { return self.h - self.y(d.post_impressions) - self.y(d.post_impressions_organic) - .5 })
-      extract('_viral', function(d) { return self.h - self.y(d.post_impressions) - self.y(d.post_impressions_organic) - self.y(d.post_impressions_viral) - .5 })
-      extract('_paid', function(d) { return self.h - self.y(d.post_impressions) - self.y(d.post_impressions_organic) - self.y(d.post_impressions_viral) - self.y(d.post_impressions_paid) - .5 })
     }
     redraw()
   }

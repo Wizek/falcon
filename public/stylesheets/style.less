@@ -7,6 +7,9 @@ a {
   color: #00B7FF;
 }
 
+li span:first-child {
+  margin-right: 1ex;
+}
 
 .chart .post_impressions,
 .chart .post_impressions_organic,
@@ -29,4 +32,16 @@ a {
 
 .chart .post_impressions_paid {
   fill: rgba(100,100,0,.5);
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
 }
