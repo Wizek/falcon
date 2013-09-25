@@ -73,7 +73,6 @@ function AppViewModel() {
       c.post_impressions_viral = extract('post_impressions_viral')
       c.post_impressions_paid = extract('post_impressions_viral')
     }
-    console.log(fix)
     self.impressions(fix)
   })
 }
@@ -84,8 +83,6 @@ ko.bindingHandlers.reachChart = {
     var self = this
     var data = valueAccessor()
     if (!data || !data.length) { return }
-    console.log('max', d3.max(data, function(d){return d.post_impressions + d.post_impressions}))
-    debugger
 
     var w = 6
     var h = 400
