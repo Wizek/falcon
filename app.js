@@ -46,7 +46,7 @@ var io = require('socket.io').listen(httpServer)
 
 io.sockets.on('connection', function (socket) {
 
-  var t = 1297110663
+  var t = Date.now()
   var v1 = 10
   var v2 = 10
   var v3 = 10
