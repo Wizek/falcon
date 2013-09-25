@@ -53,14 +53,14 @@ var io = require('socket.io').listen(httpServer)
 io.sockets.on('connection', function (socket) {
 
   var t = Date.now()
-  var v1 = 10
-  var v2 = 10
-  var v3 = 10
-  var v4 = 10
+  var v1 = 1000000
+  var v2 = 1000000
+  var v3 = 1000000
+  var v4 = 1000000
 
   function next() {
     function e (seed) {
-      return ~~Math.max(3, Math.min(25, seed + 10 * (Math.random() - .5)))
+      return ~~Math.max(500000, Math.min(1000000, seed + 500000 * (Math.random() - .5)))
     }
     return {
       time: ++t,

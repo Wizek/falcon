@@ -29,7 +29,7 @@ function AppViewModel() {
   }
 
   socket.on('new_impression', function (data) {
-    console.log(data)
+    // console.log(data)
     self.impressions.shift()
     self.impressions.push(data)
   })
@@ -38,7 +38,7 @@ function AppViewModel() {
   self.impressions(d3.range(100).map(function() {return {time:0, value: 0}}))
 
   $.get('/api/publishing').then(function(res) {
-    self.publication(res.response[0])
+    window.data = self.publication(res.response[0])
   })
   $.get('/api/impressions').then(function(res) {
     // self.impressions(d3.range(100).map(next))
@@ -60,7 +60,7 @@ function AppViewModel() {
           if (!x[name]) { return acc }
           var time = new Date(x[name][0].timestamp).valueOf()
           if (inRange()) {
-            return acc + (parseInt(x[name][0].value) / 50000)
+            return acc + (parseInt(x[name][0].value))
           } else {
             return acc
           }
@@ -87,17 +87,19 @@ ko.bindingHandlers.reachChart = {
     var data = valueAccessor()
     // console.log('data', data)
     if (!data || !data.length) { return }
+    console.log('max', d3.max(data, function(d){return d.post_impressions + d.post_impressions}))
+    debugger
 
     var w = 6
     var h = 400
-    var p = 30
+    var p = 60
 
     var x = d3.scale.linear()
         .domain([0, 1])
         .range([0, w])
 
     var y = d3.scale.linear()
-        .domain([0, 100])
+        .domain([0, 5000000])
         .rangeRound([0, h])
 
     var xAxis = d3.svg.axis()
@@ -127,7 +129,7 @@ ko.bindingHandlers.reachChart = {
       .attr("transform", "translate(" + (p) + ",0)")
       .call(d3.svg.axis()
         .scale(d3.scale.linear()
-          .domain([0, 100])
+          .domain([0, 5000000])
           .rangeRound([h + p, p])
         )
         .orient("left")
