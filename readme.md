@@ -1,8 +1,8 @@
 # install
 
 ```
-git clone {repo}
-cd {repo}
+git clone https://github.com/Wizek/falcon
+cd falcon
 npm install
 ```
 
