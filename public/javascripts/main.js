@@ -51,7 +51,7 @@ function AppViewModel() {
       c.post_impressions = extract('post_impressions')
       c.post_impressions_organic = extract('post_impressions_organic')
       c.post_impressions_viral = extract('post_impressions_viral')
-      c.post_impressions_paid = extract('post_impressionic_paid')
+      c.post_impressions_paid = extract('post_impressions_viral')
     }
     console.log(fix)
     self.impressions(fix)
