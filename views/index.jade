@@ -5,16 +5,61 @@ block content
   div(data-bind="ifnot: publication()")
     p Loading...
   div(data-bind="if: publication()")
-    ul(data-bind="with: publication()")
-      li
-        span id:
-        span(data-bind="text: id")
-      li(data-bind="with: content")
-        span content:
-        ul
-          li
-            span message:
-            span(data-bind="text: message")
+    div(data-bind="if: isEditing()")
+      button(data-bind="disable: busy(), click: cancelEditing") cancel
+      button(data-bind="disable: busy(), click: saveEditing") save
+      ul(data-bind="with: unsavedPublication()")
+        li
+          span id:
+          span(data-bind="text: id")
+        li(data-bind="with: content")
+          span content:
+          ul
+            li
+              span message:
+              input(data-bind="value: message")
+            li(data-bind="with: media")
+              span media:
+              ul
+                li
+                  span fileName:
+                  input(data-bind="value: fileName")
+                li
+                  span url:
+                  input(data-bind="value: url")
+        li
+          span status:
+          input(data-bind="value: status")
+        li
+          span scheduled:
+          input(data-bind="value: scheduled")
+    div(data-bind="if: !isEditing()")
+      button(data-bind="click: beginEditing") edit
+      ul(data-bind="with: publication()")
+        li
+          span id:
+          span(data-bind="text: id")
+        li(data-bind="with: content")
+          span content:
+          ul
+            li
+              span message:
+              span(data-bind="text: message")
+            li(data-bind="with: media")
+              span media:
+              ul
+                li
+                  span fileName:
+                  span(data-bind="text: fileName")
+                li
+                  span url:
+                  span(data-bind="text: url")
+        li
+          span status:
+          span(data-bind="text: status")
+        li
+          span scheduled:
+          span(data-bind="text: scheduled")
 
   h1 Reach
     div(data-bind="reachChart: impressions()")

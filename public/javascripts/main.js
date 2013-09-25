@@ -4,7 +4,29 @@ function AppViewModel() {
   var self = this
 
   this.publication = ko.observable()
+  this.unsavedPublication = ko.observable()
+  this.isEditing = ko.observable(false)
   this.impressions = ko.observableArray()
+  this.busy = ko.observable(false)
+
+  this.beginEditing = function() {
+    self.isEditing(true)
+    self.unsavedPublication($.extend(true, {}, self.publication()))
+  }
+  this.saveEditing = function() {
+    this.busy(true)
+    $.post('/api/publishing', self.unsavedPublication()).then(function() {
+      self.publication(self.unsavedPublication())
+      self.isEditing(false)
+      self.busy(false)
+    }, function() {
+      alert('Error while saving.')
+      self.busy(false)
+    })
+  }
+  this.cancelEditing = function() {
+    self.isEditing(false)
+  }
 
   socket.on('new_impression', function (data) {
     console.log(data)
@@ -92,13 +114,13 @@ ko.bindingHandlers.reachChart = {
         .attr("width", w * data.length - 1)
         .attr("height", h)
 
-    chart.append("g")
-      .attr("class", "axis")
-      .attr("transform", "translate(0," + (h - 20) + ")")
-      .call(xAxis)
-    chart.append("g")
-      .attr("class", "axis")
-      .call(yAxis)
+    // chart.append("g")
+    //   .attr("class", "axis")
+    //   .attr("transform", "translate(0," + (h - 20) + ")")
+    //   .call(xAxis)
+    // chart.append("g")
+    //   .attr("class", "axis")
+    //   .call(yAxis)
 
     self.w = w
     self.h = h
