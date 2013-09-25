@@ -31,6 +31,12 @@ app.get('/', function(req, res) {
 app.get('/api/publishing', function(req, res) {
   res.send(require('./mockData/publishing.json'))
 })
+app.post('/api/publishing', function(req, res) {
+  // Save into memory
+  // This method works because require only loads once then caches reference
+  require('./mockData/publishing.json').response[0] = req.body
+  res.send(200)
+})
 
 app.get('/api/impressions', function(req, res) {
   res.send(require('./mockData/impressions.json'))
