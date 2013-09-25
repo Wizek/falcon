@@ -88,8 +88,9 @@ ko.bindingHandlers.reachChart = {
     // console.log('data', data)
     if (!data || !data.length) { return }
 
-    var w = 6,
-        h = 400
+    var w = 6
+    var h = 400
+    var p = 30
 
     var x = d3.scale.linear()
         .domain([0, 1])
@@ -108,19 +109,42 @@ ko.bindingHandlers.reachChart = {
       .orient("right")
 
 
-    console.log(w * data.length - 1)
-    var chart = d3.select("body").append("svg")
+    var chartOuter = d3.select("body").append("svg")
         .attr("class", "chart")
+        .attr("width", w * data.length - 1 + p*2)
+        .attr("height", h + p*2)
+
+    var chart = chartOuter.append('g')
         .attr("width", w * data.length - 1)
         .attr("height", h)
+        .attr('transform', 'translate('+[p, p].join(',')+')')
+        .attr('overflow', 'hidden')
 
-    // chart.append("g")
-    //   .attr("class", "axis")
-    //   .attr("transform", "translate(0," + (h - 20) + ")")
-    //   .call(xAxis)
-    // chart.append("g")
-    //   .attr("class", "axis")
-    //   .call(yAxis)
+    chartOuter.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0," + (h - 20) + ")")
+      .call(xAxis)
+      .attr("transform", "translate(" + (p) + ",0)")
+      .call(d3.svg.axis()
+        .scale(d3.scale.linear()
+          .domain([0, 100])
+          .rangeRound([h + p, p])
+        )
+        .orient("left")
+      )
+
+    chartOuter.append("g")
+      .attr("class", "axis")
+      .call(yAxis)
+      .attr("transform", "translate(0," + (h+p) + ")")
+      .call(d3.svg.axis()
+        .scale(d3.scale.linear()
+          .domain([-100, 0])
+          .rangeRound([p, (w * data.length - 1) + p])
+        )
+        .orient("bottom")
+      )
+
 
     self.w = w
     self.h = h
