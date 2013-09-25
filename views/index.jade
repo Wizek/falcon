@@ -63,4 +63,18 @@ block content
 
   h1 Reach
     div(data-bind="reachChart: impressions()")
-  p Each bar represents one minute of data (new "real-time" data from the server is sped up 30x)
+
+  ul.legend
+    li
+      span.color.post_impressions
+      span post_impressions
+    li
+      span.color.post_impressions_organic
+      span post_impressions_organic
+    li
+      span.color.post_impressions_viral
+      span post_impressions_viral
+    li
+      span.color.post_impressions_paid
+      span post_impressions_paid
+  p.note Each bar represents one minute of data (new "real-time" data from the server is sped up 30x)

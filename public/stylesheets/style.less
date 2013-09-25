@@ -1,3 +1,8 @@
+@color_post_impressions: rgba(100,100,100,.5);
+@color_post_impressions_organic: rgba(0,100,100,.5);
+@color_post_impressions_viral: rgba(100,0,100,.5);
+@color_post_impressions_paid: rgba(100,100,0,.5);
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -19,19 +24,19 @@ li span:first-child {
 }
 
 .chart .post_impressions {
-  fill: rgba(100,100,100,.5);
+  fill: @color_post_impressions
 }
 
 .chart .post_impressions_organic {
-  fill: rgba(0,100,100,.5);
+  fill: @color_post_impressions_organic
 }
 
 .chart .post_impressions_viral {
-  fill: rgba(100,0,100,.5);
+  fill: @color_post_impressions_viral
 }
 
 .chart .post_impressions_paid {
-  fill: rgba(100,100,0,.5);
+  fill: @color_post_impressions_paid
 }
 
 .axis path,
@@ -44,4 +49,29 @@ li span:first-child {
 .axis text {
     font-family: sans-serif;
     font-size: 11px;
+}
+
+.legend {
+  padding: 0;
+  li {
+    display: inline-block;
+    margin: 0px 12px;
+    .color {
+      width: 10px;
+      height: 10px;
+      margin: 0px 3px;
+      /*background: red;*/
+      display: inline-block;
+    }
+  }
+}
+
+.color.post_impressions { background: @color_post_impressions; }
+.color.post_impressions_organic { background: @color_post_impressions_organic; }
+.color.post_impressions_viral { background: @color_post_impressions_viral; }
+.color.post_impressions_paid { background: @color_post_impressions_paid; }
+
+.note {
+  color: gray;
+  font-style: italic;
 }

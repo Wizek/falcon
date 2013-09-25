@@ -111,7 +111,7 @@ ko.bindingHandlers.reachChart = {
       .orient("right")
 
 
-    var chartOuter = d3.select("body").append("svg")
+    var chartOuter = d3.select(element).append("svg")
         .attr("class", "chart")
         .attr("width", w * data.length - 1 + p*2)
         .attr("height", h + p*2)
