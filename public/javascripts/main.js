@@ -141,10 +141,12 @@ ko.bindingHandlers.reachChart = {
       .attr("transform", "translate(0," + (h+p) + ")")
       .call(d3.svg.axis()
         .scale(d3.scale.linear()
-          .domain([-100, 0])
+          .domain([100, 0])
           .rangeRound([p, (w * data.length - 1) + p])
         )
         .orient("bottom")
+        .tickFormat(function(d) {return d + ' minutes ago'})
+        .ticks(7)
       )
 
 
@@ -179,7 +181,6 @@ ko.bindingHandlers.reachChart = {
           .transition()
             .duration(1000)
             .attr("x", function(d, i) { return self.x(i) - .5 })
-
 
         rect.transition()
             .duration(1000)
